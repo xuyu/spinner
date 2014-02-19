@@ -14,6 +14,9 @@ func MemInfo() (map[string]int64, error) {
 	mem := make(map[string]int64)
 	for _, item := range bytes.Split(content, []byte("\n")) {
 		i := bytes.IndexByte(item, ':')
+		if i < 0 {
+			continue
+		}
 		name := string(item[:i])
 		right := bytes.TrimSpace(item[i+1:])
 		kB := false
