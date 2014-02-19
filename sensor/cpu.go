@@ -36,8 +36,8 @@ func CPUTimes() (map[string]float64, error) {
 	if err != nil {
 		return nil, err
 	}
-	line := bytes.SplitN(content, []byte("\n"), 1)[0]
-	items := bytes.Fields(line)
+	line := bytes.Split(content, []byte("\n"))[0]
+	items := bytes.Fields(line)[1:]
 	total := float64(0.0)
 	for _, item := range items {
 		i, err := strconv.Atoi(string(item))
