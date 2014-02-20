@@ -14,10 +14,12 @@ func DiskIOCount() (map[string]map[string]int64, error) {
 		return nil, err
 	}
 	names := make(map[string]bool)
-	for _, line := range bytes.Split(content, NEWLINE)[2:] {
+	for _, line := range bytes.Split(content, NEWLINE)[1:] {
 		items := bytes.Fields(line)
-		name := string(items[len(items)-1])
-		names[name] = true
+		if len(items) > 0 {
+			name := string(items[len(items)-1])
+			names[name] = true
+		}
 	}
 	content, err = ioutil.ReadFile(PROC_DISKSTATS)
 	if err != nil {
@@ -26,15 +28,17 @@ func DiskIOCount() (map[string]map[string]int64, error) {
 	result := make(map[string]map[string]int64)
 	for _, line := range bytes.Split(content, NEWLINE) {
 		items := bytes.Fields(line)
-		name := string(items[2])
-		if names[name] {
-			result[name] = map[string]int64{
-				"reads":  spinner.MustInt64(string(items[3])),
-				"rbytes": spinner.MustInt64(string(items[5])),
-				"rtime":  spinner.MustInt64(string(items[6])),
-				"writes": spinner.MustInt64(string(items[7])),
-				"wbytes": spinner.MustInt64(string(items[9])),
-				"wtime":  spinner.MustInt64(string(items[10])),
+		if len(items) > 0 {
+			name := string(items[2])
+			if names[name] {
+				result[name] = map[string]int64{
+					"reads":  spinner.MustInt64(string(items[3])),
+					"rbytes": spinner.MustInt64(string(items[5])),
+					"rtime":  spinner.MustInt64(string(items[6])),
+					"writes": spinner.MustInt64(string(items[7])),
+					"wbytes": spinner.MustInt64(string(items[9])),
+					"wtime":  spinner.MustInt64(string(items[10])),
+				}
 			}
 		}
 	}
@@ -59,12 +63,14 @@ func DiskPartitions() ([][]string, error) {
 	var result [][]string
 	for _, line := range bytes.Split(content, NEWLINE) {
 		items := bytes.Fields(line)
-		result = append(result, []string{
-			string(items[0]),
-			string(items[1]),
-			string(items[2]),
-			string(items[3]),
-		})
+		if len(items) > 0 {
+			result = append(result, []string{
+				string(items[0]),
+				string(items[1]),
+				string(items[2]),
+				string(items[3]),
+			})
+		}
 	}
 	return result, nil
 }

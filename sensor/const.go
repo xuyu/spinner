@@ -4,7 +4,7 @@ const (
 	PROC_STAT        = "/proc/stat"
 	PROC_CPUINFO     = "/proc/cpuinfo"
 	PROC_MEMINFO     = "/proc/meminfo"
-	PROC_NET_DEV     = "/pro/net/dev"
+	PROC_NET_DEV     = "/proc/net/dev"
 	PROC_PARTITIONS  = "/proc/partitions"
 	PROC_DISKSTATS   = "/proc/diskstats"
 	PROC_FILESYSTEMS = "/proc/filesystems"
