@@ -15,7 +15,8 @@ func DiskIOCount() (map[string]map[string]int64, error) {
 	}
 	names := make(map[string]bool)
 	for _, line := range bytes.Split(content, NEWLINE)[2:] {
-		name := string(bytes.Fields(line)[-1])
+		items := bytes.Fields(line)
+		name := string(items[len(items)-1])
 		names[name] = true
 	}
 	content, err = ioutil.ReadFile(PROC_DISKSTATS)
@@ -28,12 +29,12 @@ func DiskIOCount() (map[string]map[string]int64, error) {
 		name := string(items[2])
 		if names[name] {
 			result[name] = map[string]int64{
-				"reads":  spinner.MustInt64(items[3]),
-				"rbytes": spinner.MustInt64(items[5]),
-				"rtime":  spinner.MustInt64(items[6]),
-				"writes": spinner.MustInt64(items[7]),
-				"wbytes": spinner.MustInt64(items[9]),
-				"wtime":  spinner.MustInt64(items[10]),
+				"reads":  spinner.MustInt64(string(items[3])),
+				"rbytes": spinner.MustInt64(string(items[5])),
+				"rtime":  spinner.MustInt64(string(items[6])),
+				"writes": spinner.MustInt64(string(items[7])),
+				"wbytes": spinner.MustInt64(string(items[9])),
+				"wtime":  spinner.MustInt64(string(items[10])),
 			}
 		}
 	}
@@ -70,7 +71,7 @@ func DiskPartitions() ([][]string, error) {
 
 func DiskUsage(mountpoint string) (uint64, uint64, error) {
 	var fs syscall.Statfs_t
-	if err := syscall.Statfs(mountpoint, &st); err != nil {
+	if err := syscall.Statfs(mountpoint, &fs); err != nil {
 		return 0, 0, err
 	}
 	return fs.Blocks * uint64(fs.Bsize), fs.Bfree * uint64(fs.Bsize), nil

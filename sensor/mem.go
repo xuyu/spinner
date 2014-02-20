@@ -3,16 +3,17 @@ package sensor
 import (
 	"bytes"
 	"io/ioutil"
-	"strconv"
+
+	"git.code4.in/spinner"
 )
 
 func MemInfo() (map[string]int64, error) {
-	content, err := ioutil.ReadFile("/proc/meminfo")
+	content, err := ioutil.ReadFile(PROC_MEMINFO)
 	if err != nil {
 		return nil, err
 	}
 	mem := make(map[string]int64)
-	for _, item := range bytes.Split(content, []byte("\n")) {
+	for _, item := range bytes.Split(content, NEWLINE) {
 		i := bytes.IndexByte(item, ':')
 		if i < 0 {
 			continue
@@ -20,14 +21,11 @@ func MemInfo() (map[string]int64, error) {
 		name := string(item[:i])
 		right := bytes.TrimSpace(item[i+1:])
 		kB := false
-		if bytes.HasSuffix(right, []byte("kB")) {
+		if bytes.HasSuffix(right, MEM_KB) {
 			kB = true
-			right = bytes.TrimSpace(bytes.TrimSuffix(right, []byte("kB")))
+			right = bytes.TrimSpace(bytes.TrimSuffix(right, MEM_KB))
 		}
-		value, err := strconv.ParseInt(string(right), 10, 64)
-		if err != nil {
-			return nil, err
-		}
+		value := spinner.MustInt64(string(right))
 		if kB {
 			value = value * 1024
 		}
