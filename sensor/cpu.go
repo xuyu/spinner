@@ -30,21 +30,23 @@ func CPUCountPhysical() (int, error) {
 	return len(found), nil
 }
 
-func CPUTimes() (map[string]float64, error) {
+func CPUTimes() (map[string]int64, error) {
 	content, err := ioutil.ReadFile(PROC_STAT)
 	if err != nil {
 		return nil, err
 	}
 	line := bytes.Split(content, NEWLINE)[0]
 	items := bytes.Fields(line)[1:]
-	total := float64(0.0)
+	total := int64(0)
 	for _, item := range items {
-		total += float64(spinner.MustInt64(string(item)))
+		total += spinner.MustInt64(string(item))
 	}
-	return map[string]float64{
-		"user":   float64(spinner.MustInt64(string(items[0]))) / total * 100,
-		"nice":   float64(spinner.MustInt64(string(items[1]))) / total * 100,
-		"system": float64(spinner.MustInt64(string(items[2]))) / total * 100,
-		"iowait": float64(spinner.MustInt64(string(items[3]))) / total * 100,
+	return map[string]int64{
+		"user":   spinner.MustInt64(string(items[0])),
+		"nice":   spinner.MustInt64(string(items[1])),
+		"system": spinner.MustInt64(string(items[2])),
+		"idle":   spinner.MustInt64(string(items[3])),
+		"iowait": spinner.MustInt64(string(items[4])),
+		"total":  total,
 	}, nil
 }
