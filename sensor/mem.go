@@ -31,5 +31,12 @@ func MemInfo() (map[string]int64, error) {
 		}
 		mem[name] = value
 	}
-	return mem, nil
+	return map[string]int64{
+		"total":   mem["MemTotal"],
+		"free":    mem["MemFree"],
+		"buffers": mem["Buffers"],
+		"cached":  mem["Cached"],
+		"stotal":  mem["SwapTotal"],
+		"sfree":   mem["SwapFree"],
+	}, nil
 }
