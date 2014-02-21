@@ -1,6 +1,7 @@
 package sensor
 
 const (
+	PROC             = "/proc"
 	PROC_STAT        = "/proc/stat"
 	PROC_CPUINFO     = "/proc/cpuinfo"
 	PROC_MEMINFO     = "/proc/meminfo"
