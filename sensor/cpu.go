@@ -8,7 +8,7 @@ import (
 )
 
 func CPUCountLogical() (int, error) {
-	content, err := spinner.ReadOnce(PROC_STAT)
+	content, err := spinner.ReadOnce(ProcStat)
 	if err != nil {
 		return 0, err
 	}
@@ -17,13 +17,13 @@ func CPUCountLogical() (int, error) {
 }
 
 func CPUCountPhysical() (int, error) {
-	content, err := spinner.ReadOnce(PROC_CPUINFO)
+	content, err := spinner.ReadOnce(ProcCPUInfo)
 	if err != nil {
 		return 0, err
 	}
 	found := make(map[string]bool)
-	for _, line := range bytes.Split(content, NEWLINE) {
-		if bytes.HasPrefix(line, PHYSICAL_ID) {
+	for _, line := range bytes.Split(content, Newline) {
+		if bytes.HasPrefix(line, PhysicalID) {
 			found[string(line)] = true
 		}
 	}
@@ -31,11 +31,11 @@ func CPUCountPhysical() (int, error) {
 }
 
 func CPUTimes() (map[string]int64, error) {
-	content, err := ioutil.ReadFile(PROC_STAT)
+	content, err := ioutil.ReadFile(ProcStat)
 	if err != nil {
 		return nil, err
 	}
-	line := bytes.Split(content, NEWLINE)[0]
+	line := bytes.Split(content, Newline)[0]
 	items := bytes.Fields(line)[1:]
 	total := int64(0)
 	for _, item := range items {

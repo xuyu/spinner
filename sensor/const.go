@@ -1,21 +1,21 @@
 package sensor
 
 const (
-	PROC             = "/proc"
-	PROC_STAT        = "/proc/stat"
-	PROC_CPUINFO     = "/proc/cpuinfo"
-	PROC_MEMINFO     = "/proc/meminfo"
-	PROC_NET_DEV     = "/proc/net/dev"
-	PROC_PARTITIONS  = "/proc/partitions"
-	PROC_DISKSTATS   = "/proc/diskstats"
-	PROC_FILESYSTEMS = "/proc/filesystems"
-	ETC_MTAB         = "/etc/mtab"
+	PROC            = "/proc"
+	ProcStat        = "/proc/stat"
+	ProcCPUInfo     = "/proc/cpuinfo"
+	ProcMemInfo     = "/proc/meminfo"
+	ProcNetDev      = "/proc/net/dev"
+	ProcPartitions  = "/proc/partitions"
+	ProcDiskStats   = "/proc/diskstats"
+	ProcFileSystems = "/proc/filesystems"
+	EtcMtab         = "/etc/mtab"
 )
 
 var (
-	NEWLINE     = []byte("\n")
-	NODEV       = []byte("nodev")
-	PHYSICAL_ID = []byte("physical id")
-	MEM_KB      = []byte("kB")
-	BTIME       = []byte("btime")
+	Newline    = []byte("\n")
+	NoDev      = []byte("nodev")
+	PhysicalID = []byte("physical id")
+	MemKB      = []byte("kB")
+	BTime      = []byte("btime")
 )

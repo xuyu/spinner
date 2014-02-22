@@ -48,10 +48,10 @@ func TestProcessCmdline(t *testing.T) {
 	fmt.Println(fmt.Sprintf("[%s]", strings.Join(cmdline, " ")))
 }
 
-func TestProcessUid(t *testing.T) {
+func TestProcessUID(t *testing.T) {
 	pid := os.Getpid()
 	p := &Process{Pid: pid}
-	uid, err := p.GetUid()
+	uid, err := p.GetUID()
 	if err != nil {
 		t.Error(err)
 	}

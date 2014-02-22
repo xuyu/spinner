@@ -9,13 +9,13 @@ import (
 )
 
 func BootTime() (int64, error) {
-	content, err := spinner.ReadOnce(PROC_STAT)
+	content, err := spinner.ReadOnce(ProcStat)
 	if err != nil {
 		return 0, err
 	}
-	for _, line := range bytes.Split(content, NEWLINE) {
-		if bytes.HasPrefix(line, BTIME) {
-			s := string(bytes.TrimSpace(bytes.TrimPrefix(line, BTIME)))
+	for _, line := range bytes.Split(content, Newline) {
+		if bytes.HasPrefix(line, BTime) {
+			s := string(bytes.TrimSpace(bytes.TrimPrefix(line, BTime)))
 			return strconv.ParseInt(s, 10, 64)
 		}
 	}

@@ -8,12 +8,12 @@ import (
 )
 
 func MemInfo() (map[string]int64, error) {
-	content, err := ioutil.ReadFile(PROC_MEMINFO)
+	content, err := ioutil.ReadFile(ProcMemInfo)
 	if err != nil {
 		return nil, err
 	}
 	mem := make(map[string]int64)
-	for _, item := range bytes.Split(content, NEWLINE) {
+	for _, item := range bytes.Split(content, Newline) {
 		i := bytes.IndexByte(item, ':')
 		if i < 0 {
 			continue
@@ -21,9 +21,9 @@ func MemInfo() (map[string]int64, error) {
 		name := string(item[:i])
 		right := bytes.TrimSpace(item[i+1:])
 		kB := false
-		if bytes.HasSuffix(right, MEM_KB) {
+		if bytes.HasSuffix(right, MemKB) {
 			kB = true
-			right = bytes.TrimSpace(bytes.TrimSuffix(right, MEM_KB))
+			right = bytes.TrimSpace(bytes.TrimSuffix(right, MemKB))
 		}
 		value := spinner.MustInt64(string(right))
 		if kB {

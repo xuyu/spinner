@@ -9,24 +9,24 @@ import (
 )
 
 func DiskIOCount() (map[string]map[string]int64, error) {
-	content, err := ioutil.ReadFile(PROC_PARTITIONS)
+	content, err := ioutil.ReadFile(ProcPartitions)
 	if err != nil {
 		return nil, err
 	}
 	names := make(map[string]bool)
-	for _, line := range bytes.Split(content, NEWLINE)[1:] {
+	for _, line := range bytes.Split(content, Newline)[1:] {
 		items := bytes.Fields(line)
 		if len(items) > 0 {
 			name := string(items[len(items)-1])
 			names[name] = true
 		}
 	}
-	content, err = ioutil.ReadFile(PROC_DISKSTATS)
+	content, err = ioutil.ReadFile(ProcDiskStats)
 	if err != nil {
 		return nil, err
 	}
 	result := make(map[string]map[string]int64)
-	for _, line := range bytes.Split(content, NEWLINE) {
+	for _, line := range bytes.Split(content, Newline) {
 		items := bytes.Fields(line)
 		if len(items) > 0 {
 			name := string(items[2])
@@ -46,22 +46,22 @@ func DiskIOCount() (map[string]map[string]int64, error) {
 }
 
 func DiskPartitions() ([][]string, error) {
-	content, err := ioutil.ReadFile(PROC_FILESYSTEMS)
+	content, err := ioutil.ReadFile(ProcFileSystems)
 	if err != nil {
 		return nil, err
 	}
 	var devs []string
-	for _, line := range bytes.Split(content, NEWLINE) {
-		if !bytes.HasPrefix(line, NODEV) {
+	for _, line := range bytes.Split(content, Newline) {
+		if !bytes.HasPrefix(line, NoDev) {
 			devs = append(devs, string(bytes.TrimSpace(line)))
 		}
 	}
-	content, err = ioutil.ReadFile(ETC_MTAB)
+	content, err = ioutil.ReadFile(EtcMtab)
 	if err != nil {
 		return nil, err
 	}
 	var result [][]string
-	for _, line := range bytes.Split(content, NEWLINE) {
+	for _, line := range bytes.Split(content, Newline) {
 		items := bytes.Fields(line)
 		if len(items) > 0 {
 			result = append(result, []string{

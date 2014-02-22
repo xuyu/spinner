@@ -8,12 +8,12 @@ import (
 )
 
 func NetIOCount() (map[string]map[string]int64, error) {
-	content, err := ioutil.ReadFile(PROC_NET_DEV)
+	content, err := ioutil.ReadFile(ProcNetDev)
 	if err != nil {
 		return nil, err
 	}
 	result := make(map[string]map[string]int64)
-	for _, line := range bytes.Split(content, NEWLINE)[2:] {
+	for _, line := range bytes.Split(content, Newline)[2:] {
 		i := bytes.LastIndex(line, []byte(":"))
 		if i > 0 {
 			name := string(bytes.TrimSpace(line[:i]))

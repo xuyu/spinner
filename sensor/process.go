@@ -62,12 +62,12 @@ func (p *Process) GetCmdline() ([]string, error) {
 	return strings.Split(strings.TrimRight(string(content), "\x00"), "\x00"), nil
 }
 
-func (p *Process) GetUid() (string, error) {
+func (p *Process) GetUID() (string, error) {
 	content, err := ioutil.ReadFile(fmt.Sprintf("/proc/%d/status", p.Pid))
 	if err != nil {
 		return "", err
 	}
-	for _, line := range bytes.Split(content, NEWLINE) {
+	for _, line := range bytes.Split(content, Newline) {
 		if bytes.HasPrefix(line, []byte("Uid")) {
 			i := bytes.Index(line, []byte(":"))
 			n := bytes.Fields(bytes.TrimSpace(line[i+1:]))[0]
@@ -94,7 +94,7 @@ func (p *Process) GetThreadsNum() (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	for _, line := range bytes.Split(content, NEWLINE) {
+	for _, line := range bytes.Split(content, Newline) {
 		if bytes.HasPrefix(line, []byte("Threads")) {
 			n := bytes.TrimSpace(bytes.Split(line, []byte(":"))[1])
 			return spinner.MustInt(string(n)), nil
@@ -113,7 +113,7 @@ func (p *Process) GetSocketConnectionsNum() (int, error) {
 		name := fmt.Sprintf("/proc/%d/fd/%s", p.Pid, fd.Name())
 		link, err := os.Readlink(name)
 		if err == nil && strings.HasPrefix(link, "socket:[") {
-			count += 1
+			count++
 		}
 	}
 	return count, nil
@@ -124,7 +124,7 @@ func (p *Process) GetState() (string, error) {
 	if err != nil {
 		return "", err
 	}
-	for _, line := range bytes.Split(content, NEWLINE) {
+	for _, line := range bytes.Split(content, Newline) {
 		if bytes.HasPrefix(line, []byte("State")) {
 			s := bytes.Split(line, []byte(":"))[1]
 			return string(bytes.TrimSpace(s)), nil
