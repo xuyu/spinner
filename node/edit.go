@@ -8,6 +8,8 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+
+	"git.code4.in/spinner"
 )
 
 func open(rw http.ResponseWriter, req *http.Request, file string) {
@@ -46,13 +48,12 @@ func save(rw http.ResponseWriter, req *http.Request, file string) {
 	if body == nil {
 		return
 	}
-	info, err := os.Stat(file)
-	if err != nil {
+	mode, err := spinner.FilePerm(file, 0644)
+	if err != nil && !os.IsNotExist(err) {
 		internalServerError(rw, err)
 		log.Printf("stat file [%s] error: %s", file, err.Error())
 		return
 	}
-	mode := info.Mode()
 	switch {
 	case mode&os.ModeSymlink != 0:
 		file, err = absLink(file)
