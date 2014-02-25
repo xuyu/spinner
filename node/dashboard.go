@@ -54,6 +54,7 @@ func loadAverage() ([3]float64, error) {
 	return loads, err
 }
 
+// Dashboard handles http request, returns summary info of a server
 func Dashboard(rw http.ResponseWriter, req *http.Request) {
 	d := make(map[string]interface{})
 	for _, items := range collectors {

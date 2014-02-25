@@ -74,6 +74,9 @@ func save(rw http.ResponseWriter, req *http.Request, file string) {
 	log.Printf("save file [%s]", file)
 }
 
+// Edit handles http request
+// GET method returns the file's content
+// POST method save the body as file's content
 func Edit(rw http.ResponseWriter, req *http.Request) {
 	file := req.URL.Query().Get("file")
 	if file == "" {

@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Terminal handles http request which executes shell commands like a linux terminal
 func Terminal(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	cmd := strings.TrimSpace(req.FormValue("cmd"))
