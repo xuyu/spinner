@@ -1,13 +1,9 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
-	"io/ioutil"
 	"log"
-	"net"
 	"net/http"
-	"time"
 )
 
 var (
@@ -22,41 +18,17 @@ func init() {
 	flag.StringVar(&dtFile, "datacenter", "datacenter.json", "datacenter define data file")
 }
 
-func KeepAlive(rw http.ResponseWriter, req *http.Request) {
-	req.ParseForm()
-	hostname := req.FormValue("hostname")
-	if hostname == "" {
-		rw.WriteHeader(http.StatusForbidden)
-		return
-	}
-	m := datacenter.findMachine(hostname)
-	if m == nil {
-		rw.WriteHeader(http.StatusNotFound)
-		return
-	}
-	m.keepalive = time.Now().Unix()
-	host, _, err := net.SplitHostPort(req.RemoteAddr)
-	if err != nil {
-		rw.WriteHeader(http.StatusInternalServerError)
-		return
-	}
-	m.host = host
-}
-
 func main() {
 	flag.Parse()
 
-	data, err := ioutil.ReadFile(dtFile)
-	if err != nil {
-		log.Printf("read datacenter file error: %s", err.Error())
-	} else {
-		if err := json.Unmarshal(data, datacenter); err != nil {
-			log.Printf("unmarshal datacenter json error: %s", err.Error())
-		}
+	if err := datacenter.fill(dtFile); err != nil {
+		log.Fatal(err.Error())
 	}
 
 	centralHandler := http.NewServeMux()
-	centralHandler.HandleFunc("/keepalive", KeepAlive)
+	centralHandler.HandleFunc("/spinner/central/keepalive", keepAlive)
+	centralHandler.HandleFunc("/spinner/central/checkupdate", checkUpdate)
+	centralHandler.HandleFunc("/spinner/central/update", doUpdate)
 
 	auth := &authHandler{
 		centralHandler: centralHandler,

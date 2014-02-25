@@ -4,6 +4,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"strings"
 )
 
 func isPrivateIP(ip net.IP) bool {
@@ -24,7 +25,7 @@ type authHandler struct {
 }
 
 func (a *authHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	if req.URL.Path == "/keepalive" {
+	if strings.HasPrefix(req.URL.Path, "/spinner/central/") {
 		host, _, err := net.SplitHostPort(req.RemoteAddr)
 		if err != nil {
 			rw.WriteHeader(http.StatusInternalServerError)

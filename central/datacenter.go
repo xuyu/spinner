@@ -1,5 +1,10 @@
 package main
 
+import (
+	"encoding/json"
+	"io/ioutil"
+)
+
 type DataCenter struct {
 	Name     string
 	Location string
@@ -15,4 +20,12 @@ func (d *DataCenter) findMachine(hostname string) *Machine {
 		}
 	}
 	return nil
+}
+
+func (d *DataCenter) fill(filename string) error {
+	data, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return err
+	}
+	return json.Unmarshal(data, d)
 }
