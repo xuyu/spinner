@@ -2,12 +2,14 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"flag"
 	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
 	"os"
+	"strings"
 )
 
 var (
@@ -26,8 +28,9 @@ func internalServerError(rw http.ResponseWriter, err error) {
 }
 
 type authHandler struct {
-	trust   []net.IP
-	handler http.Handler
+	trustFile string
+	trust     []net.IP
+	handler   http.Handler
 }
 
 func (a *authHandler) ensureTrustIP(ip net.IP) bool {
@@ -56,11 +59,11 @@ func (a *authHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 	a.handler.ServeHTTP(rw, req)
 }
 
-func fillTrustIP(auth *authHandler) {
-	data, err := ioutil.ReadFile("trust.ips")
+func (a *authHandler) fillTrust() {
+	data, err := ioutil.ReadFile(a.trustFile)
 	if err != nil {
 		if os.IsNotExist(err) {
-			auth.trust = nil
+			a.trust = nil
 			return
 		}
 		log.Fatal(err.Error())
@@ -74,19 +77,64 @@ func fillTrustIP(auth *authHandler) {
 		if ip == nil {
 			log.Fatalf("invalid trust ip: %s", s)
 		}
-		auth.trust = append(auth.trust, ip)
+		a.trust = append(a.trust, ip)
 	}
+}
+
+func (a *authHandler) saveTrust() error {
+	ips := []string{}
+	if a.trust != nil {
+		for _, ip := range a.trust {
+			ips = append(ips, ip.String())
+		}
+	}
+	data := strings.Join(ips, "\n")
+	return ioutil.WriteFile(a.trustFile, []byte(data), 0600)
+}
+
+func (a *authHandler) Trust(rw http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
+	ip := net.ParseIP(req.FormValue("ip"))
+	if ip != nil {
+		if a.trust == nil {
+			a.trust = []net.IP{}
+		}
+		a.trust = append(a.trust, ip)
+		a.saveTrust()
+	}
+	b, _ := json.Marshal(a.trust)
+	rw.Write(b)
+}
+
+func (a *authHandler) Untrust(rw http.ResponseWriter, req *http.Request) {
+	req.ParseForm()
+	ip := net.ParseIP(req.FormValue("ip"))
+	if ip != nil && a.trust != nil {
+		slice := []net.IP{}
+		for _, trustIP := range a.trust {
+			if !trustIP.Equal(ip) {
+				slice = append(slice, trustIP)
+			}
+		}
+		a.trust = slice
+		a.saveTrust()
+	}
+	b, _ := json.Marshal(a.trust)
+	rw.Write(b)
 }
 
 func main() {
 	flag.Parse()
 
 	auth := &authHandler{
-		trust:   []net.IP{},
-		handler: http.DefaultServeMux,
+		trustFile: "trust.ips",
+		trust:     []net.IP{},
+		handler:   http.DefaultServeMux,
 	}
-	fillTrustIP(auth)
+	auth.fillTrust()
 
+	http.HandleFunc("/spinner/node/trust", auth.Trust)
+	http.HandleFunc("/spinner/node/untrust", auth.Untrust)
 	http.HandleFunc("/spinner/node/terminal", Terminal)
 	http.HandleFunc("/spinner/node/edit", Edit)
 	http.HandleFunc("/spinner/node/dashboard", Dashboard)
