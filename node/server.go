@@ -4,22 +4,32 @@ import (
 	"bytes"
 	"encoding/json"
 	"flag"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"strings"
+	"time"
 )
 
 var (
 	addr      string
 	trustFile string
+	hostname  string
 )
 
 func init() {
 	flag.StringVar(&addr, "http", ":51002", "http server listen address")
-	flag.StringVar(&trustFile, "trust", "trust", "trust ips file")
+	flag.StringVar(&trustFile, "trust", "trust.ips", "trust ips file")
+
+	name, err := os.Hostname()
+	if err != nil {
+		log.Fatal(err.Error())
+	}
+	flag.StringVar(&hostname, "hostname", name, "unique hostname in whole datacenter")
 }
 
 func internalServerError(rw http.ResponseWriter, err error) {
@@ -127,6 +137,20 @@ func (a *authHandler) Untrust(rw http.ResponseWriter, req *http.Request) {
 
 func main() {
 	flag.Parse()
+
+	go func() {
+		h := url.QueryEscape(hostname)
+		u := fmt.Sprintf("http://central.spinner:51001/keepalive?hostname=%s", h)
+		for {
+			resp, err := http.Get(u)
+			if err != nil {
+				log.Println(err.Error())
+			} else if resp.StatusCode != http.StatusOK {
+				log.Printf("%s %s", u, resp.Status)
+			}
+			time.Sleep(3 * time.Minute)
+		}
+	}()
 
 	auth := &authHandler{
 		trustFile: trustFile,
