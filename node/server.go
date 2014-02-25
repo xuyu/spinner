@@ -13,11 +13,13 @@ import (
 )
 
 var (
-	addr string
+	addr      string
+	trustFile string
 )
 
 func init() {
 	flag.StringVar(&addr, "http", ":51002", "http server listen address")
+	flag.StringVar(&trustFile, "trust", "trust", "trust ips file")
 }
 
 func internalServerError(rw http.ResponseWriter, err error) {
@@ -127,7 +129,7 @@ func main() {
 	flag.Parse()
 
 	auth := &authHandler{
-		trustFile: "trust.ips",
+		trustFile: trustFile,
 		trust:     []net.IP{},
 		handler:   http.DefaultServeMux,
 	}
