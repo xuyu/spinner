@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-func FileSystem(rw http.ResponseWriter, req *http.Request) {
+func Filesystem(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	p := req.FormValue("path")
 	info, err := os.Lstat(p)

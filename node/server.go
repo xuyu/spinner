@@ -154,7 +154,7 @@ func main() {
 	http.HandleFunc("/spinner/node/terminal", Terminal)
 	http.HandleFunc("/spinner/node/edit", Edit)
 	http.HandleFunc("/spinner/node/dashboard", Dashboard)
-	http.HandleFunc("/spinner/node/filesystem", FileSystem)
+	http.HandleFunc("/spinner/node/filesystem", Filesystem)
 
 	log.Printf("http server listen at [%s]", addr)
 	log.Fatal(http.ListenAndServe(addr, auth))
