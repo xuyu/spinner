@@ -24,7 +24,7 @@ func main() {
 	flag.Parse()
 
 	if err := datacenter.fill(dtFile); err != nil {
-		log.Fatal(err.Error())
+		log.Println(err.Error())
 	}
 
 	centralHandler := http.NewServeMux()
@@ -41,6 +41,7 @@ func main() {
 	webuiHandler.HandleFunc("/spinner/webui/filesystem", webuiFilesystem)
 	webuiHandler.HandleFunc("/spinner/webui/open", webuiOpen)
 	webuiHandler.HandleFunc("/spinner/webui/save", webuiSave)
+	webuiHandler.HandleFunc("/", webuiIndex)
 
 	staticHandler := http.StripPrefix("/spinner/webui/static/", http.FileServer(http.Dir(staticPath)))
 

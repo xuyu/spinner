@@ -6,9 +6,18 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"path/filepath"
 	"reflect"
 	"strconv"
 )
+
+func webuiIndex(rw http.ResponseWriter, req *http.Request) {
+	if req.URL.Path != "/" {
+		rw.WriteHeader(http.StatusNotFound)
+		return
+	}
+	http.ServeFile(rw, req, filepath.Join(staticPath, "index.html"))
+}
 
 func webuiTrust(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
