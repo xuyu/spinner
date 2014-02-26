@@ -1,4 +1,4 @@
-spinner-node:
+spinner-node: *.go ../sensor/*.go ../*.go
 	go build -v -ldflags "-s" -o spinner-node
 
 clean:

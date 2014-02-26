@@ -1,4 +1,4 @@
-spinner-central:
+spinner-central: *.go ../*.go
 	go build -v -ldflags "-s" -o spinner-central
 
 clean:
