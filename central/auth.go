@@ -4,6 +4,7 @@ import (
 	"log"
 	"net"
 	"net/http"
+	"path/filepath"
 	"strings"
 )
 
@@ -35,8 +36,10 @@ func (a *authHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		a.staticHandler.ServeHTTP(rw, req)
 	case strings.HasPrefix(req.URL.Path, "/spinner/webui/"):
 		a.serveWebUI(rw, req)
+	case req.URL.Path == "/":
+		http.ServeFile(rw, req, filepath.Join(staticPath, "index.html"))
 	default:
-		rw.WriteHeader(http.StatusForbidden)
+		rw.WriteHeader(http.StatusNotFound)
 	}
 }
 

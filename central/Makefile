@@ -11,3 +11,4 @@ install:
 	mkdir -p /var/lib/spinner-central/etc
 	cp -f spinner-central /var/lib/spinner-central/bin
 	cp -f spinner-central.conf /etc/init
+	cp -rf ../webui/* /var/lib/spinner-central/etc/static
