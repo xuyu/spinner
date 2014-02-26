@@ -40,7 +40,10 @@ func absLink(link string) (string, error) {
 		log.Printf("abs link [%s] error: %s", link, err.Error())
 		return p, err
 	}
-	return filepath.Abs(p)
+	if filepath.IsAbs(p) {
+		return p
+	}
+	return filepath.Join(link, p)
 }
 
 func save(rw http.ResponseWriter, req *http.Request, file string) {
