@@ -41,9 +41,9 @@ func absLink(link string) (string, error) {
 		return p, err
 	}
 	if filepath.IsAbs(p) {
-		return p
+		return p, nil
 	}
-	return filepath.Join(link, p)
+	return filepath.Join(link, p), nil
 }
 
 func save(rw http.ResponseWriter, req *http.Request, file string) {
