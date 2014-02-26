@@ -24,7 +24,7 @@ func init() {
 
 func checkUpdate() (string, []string) {
 	version := spinner.ReadVersion(versionFile)
-	u := fmt.Sprintf("%s/spinner/central/checkupdate?version=%s", centralSpinner, version)
+	u := fmt.Sprintf("%s/spinner/central/checkupdate?version=%s", centralSpinner, url.QueryEscape(version))
 	resp, err := http.Get(u)
 	if err != nil {
 		log.Println(err.Error())
