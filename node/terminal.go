@@ -15,8 +15,7 @@ func Terminal(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	items := strings.Fields(cmd)
-	output, err := exec.Command(items[0], items[1:]...).CombinedOutput()
+	output, err := exec.Command("/bin/sh", "-c", cmd).CombinedOutput()
 	if err != nil {
 		internalServerError(rw, err)
 		log.Printf("terminal execute command [%s] error: %s", cmd, err.Error())
