@@ -18,11 +18,11 @@ func keepAlive(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusNotFound)
 		return
 	}
-	m.keepalive = time.Now().Unix()
+	m.KeepAlive = time.Now().Unix()
 	host, _, err := net.SplitHostPort(req.RemoteAddr)
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	m.host = host
+	m.IP = host
 }

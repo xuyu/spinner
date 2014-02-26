@@ -11,6 +11,11 @@ type DataCenter struct {
 	Groups   []*Group
 }
 
+type Group struct {
+	Name     string
+	Machines []*Machine
+}
+
 func (d *DataCenter) findMachine(hostname string) *Machine {
 	for _, gp := range d.Groups {
 		for _, m := range gp.Machines {
@@ -28,4 +33,14 @@ func (d *DataCenter) fill(filename string) error {
 		return err
 	}
 	return json.Unmarshal(data, d)
+}
+
+func (d *DataCenter) allMachines() map[string]*Machine {
+	machines := make(map[string]*Machine)
+	for _, gp := range d.Groups {
+		for _, m := range gp.Machines {
+			machines[m.Hostname] = m
+		}
+	}
+	return machines
 }

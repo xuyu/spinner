@@ -8,6 +8,7 @@ import (
 )
 
 func isPrivateIP(ip net.IP) bool {
+	ip = ip.To4()
 	if ip[0] == 10 {
 		return true
 	}
@@ -21,29 +22,44 @@ func isPrivateIP(ip net.IP) bool {
 }
 
 type authHandler struct {
-	centralHandler *http.ServeMux
+	centralHandler http.Handler
+	webuiHandler   http.Handler
+	staticHandler  http.Handler
 }
 
 func (a *authHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
-	if strings.HasPrefix(req.URL.Path, "/spinner/central/") {
-		host, _, err := net.SplitHostPort(req.RemoteAddr)
-		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
-			log.Printf(err.Error())
-			return
-		}
-		ip := net.ParseIP(host)
-		if ip == nil {
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		if !ip.IsLoopback() && !isPrivateIP(ip) {
-			rw.WriteHeader(http.StatusNotAcceptable)
-			log.Printf("not private ip: %s", ip.String())
-			return
-		}
-		a.centralHandler.ServeHTTP(rw, req)
+	switch {
+	case strings.HasPrefix(req.URL.Path, "/spinner/central/"):
+		a.serveCentral(rw, req)
+	case strings.HasPrefix(req.URL.Path, "/spinner/webui/static/"):
+		a.staticHandler.ServeHTTP(rw, req)
+	case strings.HasPrefix(req.URL.Path, "/spinner/webui/"):
+		a.serveWebUI(rw, req)
+	default:
+		rw.WriteHeader(http.StatusForbidden)
+	}
+}
+
+func (a *authHandler) serveWebUI(rw http.ResponseWriter, req *http.Request) {
+	a.webuiHandler.ServeHTTP(rw, req)
+}
+
+func (a *authHandler) serveCentral(rw http.ResponseWriter, req *http.Request) {
+	host, _, err := net.SplitHostPort(req.RemoteAddr)
+	if err != nil {
+		rw.WriteHeader(http.StatusInternalServerError)
+		log.Printf(err.Error())
 		return
 	}
-	rw.WriteHeader(http.StatusForbidden)
+	ip := net.ParseIP(host)
+	if ip == nil {
+		rw.WriteHeader(http.StatusInternalServerError)
+		return
+	}
+	if !ip.IsLoopback() && !isPrivateIP(ip) {
+		rw.WriteHeader(http.StatusNotAcceptable)
+		log.Printf("not private ip: %s", ip.String())
+		return
+	}
+	a.centralHandler.ServeHTTP(rw, req)
 }
