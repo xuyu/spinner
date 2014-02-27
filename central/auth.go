@@ -41,7 +41,7 @@ func (a *authHandler) ServeHTTP(rw http.ResponseWriter, req *http.Request) {
 		a.staticHandler.ServeHTTP(rw, req)
 	case req.URL.Path == "/login":
 		http.ServeFile(rw, req, filepath.Join(staticPath, "login.html"))
-	case req.URL.Path == "/logined" && req.Method == "POST":
+	case req.URL.Path == "/session" && req.Method == "POST":
 		a.webuiLogin(rw, req)
 	default:
 		a.serveWebUI(rw, req)
@@ -70,8 +70,7 @@ func verifySession(s string) bool {
 	return signature(items[2], items[1]) == items[0]
 }
 
-func newSession(name string) string {
-	timestamp := strconv.FormatInt(time.Now().Unix(), 10)
+func newSession(name string, timestamp string) string {
 	sign := signature(name, timestamp)
 	value := sign + "-" + timestamp + "-" + name
 	return base64.StdEncoding.EncodeToString([]byte(value))
@@ -102,13 +101,15 @@ func (a *authHandler) webuiLogin(rw http.ResponseWriter, req *http.Request) {
 	password := req.PostFormValue("password")
 	if name == "admin" && password == "123" {
 		now := time.Now()
-		//exp := now.AddDate(0, 0, 7)
+		exp := now.AddDate(0, 0, 7)
 		timestamp := strconv.FormatInt(now.Unix(), 10)
 		cookie := &http.Cookie{
 			Name:     SessionName,
-			Value:    signature(name, timestamp),
+			Value:    newSession(name, timestamp),
 			Path:     "/",
-			Secure:   true,
+			Domain:   "192.168.84.250",
+			Expires:  exp,
+			MaxAge:   86400 * 7,
 			HttpOnly: true,
 		}
 		http.SetCookie(rw, cookie)
