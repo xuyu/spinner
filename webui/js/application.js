@@ -25,6 +25,14 @@ var g_cur_task = undefined;
 var g_cur_hostname = undefined;
 var g_cur_machine = $("#current-machine");
 
+// datacenter label
+var g_datacenter_name = $("#datacenter-name");
+var g_datacenter_location = $("#datacenter-location");
+var g_group_tree = $("#dt-group-tree");
+var g_terminal = $("#dt-terminal");
+var g_terminal_textarea = $("#dt-terminal pre");
+var g_terminal_input = $("#dt-terminal input");
+
 function change_cur_task(name){
 	if (name != undefined && name != null && name != "") {
 		g_cur_task = name;
@@ -49,7 +57,7 @@ function task(name, hostname){
 	change_cur_hostname(hostname);
 	switch (name) {
 		case "group_tree":
-			$("#dt-group-tree").addClass("cur-task");
+			g_group_tree.addClass("cur-task");
 			group_tree_api();
 		break
 		case "trust_central":
@@ -59,15 +67,39 @@ function task(name, hostname){
 		case "file_system":
 		break
 		case "terminal":
+			g_terminal.addClass("cur-task");
+			g_terminal_textarea.empty();
+			g_terminal_input.val(terminal_prompt());
 		break
 	}
+	close_menu_nav();
 }
 
-// datacenter label
-var g_datacenter_name = $("#datacenter-name");
-var g_datacenter_location = $("#datacenter-location");
-var g_group_tree = $("#dt-group-tree");
+function terminal_prompt(){
+	return "root@" + g_cur_hostname + "# ";
+}
+
+function terminal_textarea_append(text){
+	var original = g_terminal_textarea.text();
+	if (original != "") {
+		original = original + "\n";
+	}
+	g_terminal_textarea.text(original + text);
+	g_terminal_textarea.scrollTop(g_terminal_textarea[0].scrollHeight - g_terminal_textarea.height());
+}
+
+function terminal_input_bind_event(){
+	g_terminal_input.keyup(function(e){
+		if (e.keyCode == 13) {
+			var cmd = g_terminal_input.val();
+			g_terminal_input.val(terminal_prompt());
+			terminal_textarea_append(cmd);
+			terminal_api(cmd.replace(/^root@.+?# /, ""));
+		}
+	});
+}
 
 $(document).ready(function(){
-	open_menu_nav();
+	task('group_tree');
+	terminal_input_bind_event();
 })

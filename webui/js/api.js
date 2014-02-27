@@ -34,7 +34,19 @@ function group_tree_api(){
 			});
 			html = html + "</ul";
 			g_group_tree.html(html);
-			$(".dt-group-head").click(trigger_ul_head_click);
-		})
-	})
+			g_group_tree.find("ul>h3.dt-group-head").click(trigger_ul_head_click);
+			g_group_tree.find("ul:first-child").height(g_group_tree.find("ul:first-child>h3").outerHeight());
+			$.each(g_group_tree.find("ul"), function(index, ul){
+				if ($(ul).find("li.miss").length > 0) {
+					$(ul).addClass("has-miss");
+				}
+			});
+		});
+	});
+}
+
+function terminal_api(cmd){
+	$.get("/spinner/webui/terminal", {h: g_cur_hostname, cmd: cmd}, function(data){
+		terminal_textarea_append(data);
+	});
 }
