@@ -27,6 +27,18 @@ func (d *DataCenter) findMachine(hostname string) *Machine {
 	return nil
 }
 
+func (d *DataCenter) findAllMachines(hostname string) []*Machine {
+	result := []*Machine{}
+	for _, gp := range d.Groups {
+		for _, m := range gp.Machines {
+			if m.Hostname == hostname {
+				result = append(result, m)
+			}
+		}
+	}
+	return result
+}
+
 func (d *DataCenter) fill(filename string) error {
 	data, err := ioutil.ReadFile(filename)
 	if err != nil {
