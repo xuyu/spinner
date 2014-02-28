@@ -24,7 +24,8 @@ func init() {
 
 func checkUpdate() (string, []string) {
 	version := spinner.ReadVersion(versionFile)
-	u := fmt.Sprintf("%s/spinner/central/checkupdate?version=%s", centralSpinner, url.QueryEscape(version))
+	u := fmt.Sprintf("%s/spinner/central/checkupdate?version=%s&h=%s",
+		centralSpinner, url.QueryEscape(version), url.QueryEscape(hostname))
 	resp, err := http.Get(u)
 	if err != nil {
 		log.Println(err.Error())
@@ -53,10 +54,8 @@ func updateFile(filename string) error {
 		log.Println(err.Error())
 		return err
 	}
-	var q = url.Values{}
-	q.Add("file", filename)
-	q.Add("md5", s)
-	u := fmt.Sprintf("%s/spinner/central/update?%s", centralSpinner, q.Encode())
+	u := fmt.Sprintf("%s/spinner/central/update?file=%s&md5=%s&h=%s",
+		centralSpinner, url.QueryEscape(filename), s, url.QueryEscape(hostname))
 	resp, err := http.Get(u)
 	if err != nil {
 		log.Println(err.Error())

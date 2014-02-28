@@ -20,6 +20,36 @@ func init() {
 	flag.StringVar(&updateListFile, "update", "node-update.json", "spinner node update list file")
 }
 
+func readUpdateList() (map[string]map[string]string, error) {
+	data, err := ioutil.ReadFile(updateListFile)
+	if err != nil {
+		return nil, err
+	}
+	var list map[string]map[string]string
+	if err := json.Unmarshal(data, &list); err != nil {
+		return nil, err
+	}
+	return list, nil
+}
+
+func genUpdateList(local string, list map[string]map[string]string, hostname string) []string {
+	files := []string{local}
+	m := datacenter.findMachine(hostname)
+	if m == nil {
+		return files
+	}
+	gps := datacenter.whichGroups(m)
+	for _, gp := range gps {
+		val := list[gp.Name]
+		if val != nil && len(val) > 0 {
+			for f := range val {
+				files = append(files, f)
+			}
+		}
+	}
+	return files
+}
+
 func checkUpdate(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	version := req.FormValue("version")
@@ -28,22 +58,13 @@ func checkUpdate(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusNotModified)
 		return
 	}
-	data, err := ioutil.ReadFile(updateListFile)
+	list, err := readUpdateList()
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		log.Println(err.Error())
 		return
 	}
-	var list map[string]string
-	if err := json.Unmarshal(data, &list); err != nil {
-		rw.WriteHeader(http.StatusInternalServerError)
-		log.Println(err.Error())
-		return
-	}
-	files := []string{local}
-	for name := range list {
-		files = append(files, name)
-	}
+	files := genUpdateList(local, list, req.FormValue("h"))
 	b, err := json.Marshal(files)
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
@@ -51,6 +72,28 @@ func checkUpdate(rw http.ResponseWriter, req *http.Request) {
 		return
 	}
 	rw.Write(b)
+}
+
+func findUpdateLocal(list map[string]map[string]string, hostname, remote string) string {
+	m := datacenter.findMachine(hostname)
+	if m == nil {
+		return ""
+	}
+	gps := datacenter.whichGroups(m)
+	var local string
+	var name string
+	for _, gp := range gps {
+		val := list[gp.Name]
+		if val != nil && len(val) > 0 {
+			for k, v := range val {
+				if k == remote && (name == "" || len(gp.Name) > len(name)) {
+					name = gp.Name
+					local = v
+				}
+			}
+		}
+	}
+	return local
 }
 
 func doUpdate(rw http.ResponseWriter, req *http.Request) {
@@ -61,21 +104,15 @@ func doUpdate(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	data, err := ioutil.ReadFile(updateListFile)
+	list, err := readUpdateList()
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		log.Println(err.Error())
 		return
 	}
-	var list map[string]string
-	if err := json.Unmarshal(data, &list); err != nil {
-		rw.WriteHeader(http.StatusInternalServerError)
-		log.Println(err.Error())
-		return
-	}
-	local := list[file]
+	local := findUpdateLocal(list, req.FormValue("h"), file)
 	if local == "" {
-		rw.WriteHeader(http.StatusNotModified)
+		rw.WriteHeader(http.StatusNotFound)
 		return
 	}
 	s, err := spinner.FileMd5(local)
@@ -88,7 +125,7 @@ func doUpdate(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusNotModified)
 		return
 	}
-	data, err = ioutil.ReadFile(local)
+	data, err := ioutil.ReadFile(local)
 	if err != nil {
 		rw.WriteHeader(http.StatusInternalServerError)
 		log.Println(err.Error())

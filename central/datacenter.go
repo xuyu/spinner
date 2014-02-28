@@ -44,3 +44,15 @@ func (d *DataCenter) allMachines() map[string]*Machine {
 	}
 	return machines
 }
+
+func (d *DataCenter) whichGroups(m *Machine) []*Group {
+	gps := []*Group{}
+	for _, gp := range d.Groups {
+		for _, ma := range gp.Machines {
+			if m.Hostname == ma.Hostname {
+				gps = append(gps, gp)
+			}
+		}
+	}
+	return gps
+}
