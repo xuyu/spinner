@@ -4,6 +4,7 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
+	"flag"
 	"log"
 	"net"
 	"net/http"
@@ -12,6 +13,16 @@ import (
 	"strings"
 	"time"
 )
+
+var (
+	domain string
+	https  bool
+)
+
+func init() {
+	flag.StringVar(&domain, "domain", "", "cookie domain")
+	flag.BoolVar(&https, "https", false, "cookie secure")
+}
 
 func isPrivateIP(ip net.IP) bool {
 	ip = ip.To4()
@@ -107,10 +118,11 @@ func (a *authHandler) webuiLogin(rw http.ResponseWriter, req *http.Request) {
 			Name:     SessionName,
 			Value:    newSession(name, timestamp),
 			Path:     "/",
-			Domain:   "192.168.84.250",
+			Domain:   domain,
 			Expires:  exp,
 			MaxAge:   86400 * 7,
 			HttpOnly: true,
+			Secure:   https,
 		}
 		http.SetCookie(rw, cookie)
 		http.Redirect(rw, req, "/", http.StatusFound)
