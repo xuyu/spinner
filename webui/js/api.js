@@ -47,7 +47,21 @@ function group_tree_api(){
 }
 
 function terminal_api(cmd){
-	$.get("/spinner/webui/terminal", {h: g_cur_hostname, cmd: cmd}, function(data){
-		terminal_textarea_append(data);
+	$.ajax(
+		{
+			type: "GET",
+			url: "/spinner/webui/terminal",
+			data: {h: g_cur_hostname, cmd: cmd},
+			timeout: 60000,
+			success: function(data){
+				terminal_textarea_append(data);
+			},
+			complete: function(){
+				g_terminal_input.val(terminal_prompt());
+				g_terminal_input.removeAttr("readonly");
+			}
+		}
+	).done(function(){
+		g_terminal_input.focus();
 	});
 }

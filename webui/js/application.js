@@ -92,7 +92,7 @@ function terminal_input_bind_event(){
 	g_terminal_input.keyup(function(e){
 		if (e.keyCode == 13) {
 			var cmd = g_terminal_input.val();
-			g_terminal_input.val(terminal_prompt());
+			g_terminal_input.attr("readonly", "");
 			terminal_textarea_append(cmd);
 			terminal_api(cmd.replace(/^root@.+?# /, ""));
 		}
