@@ -169,6 +169,7 @@ body{
 	font-weight: 300;
 	font-size: 14px;
 	color: #95A5A6;
+	cursor: text;
 }
 
 #dt-terminal *:focus{
