@@ -2,12 +2,21 @@ package main
 
 import (
 	"bytes"
+	"flag"
 	"log"
 	"net/http"
 	"os/exec"
 	"strings"
 	"time"
 )
+
+var (
+	terminalShell string
+)
+
+func init() {
+	flag.StringVar(&terminalShell, "shell", "/bin/bash", "terminal shell")
+}
 
 // Terminal handles http request which executes shell commands like a linux terminal
 func Terminal(rw http.ResponseWriter, req *http.Request) {
@@ -17,7 +26,7 @@ func Terminal(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	command := exec.Command("/bin/sh", "-c", cmd)
+	command := exec.Command(terminalShell, "-c", cmd)
 	var buf bytes.Buffer
 	command.Stdout = &buf
 	command.Stderr = &buf
