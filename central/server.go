@@ -15,7 +15,7 @@ var (
 )
 
 func init() {
-	flag.StringVar(&addr, "addr", ":51001", "http server listen address")
+	flag.StringVar(&addr, "http", ":51001", "http server listen address")
 	flag.StringVar(&dtFile, "datacenter", "datacenter.json", "datacenter define data file")
 	flag.StringVar(&staticPath, "static", "static", "webui server static path")
 }
