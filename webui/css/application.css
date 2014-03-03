@@ -52,7 +52,6 @@ body{
 }
 
 #main-container{
-	padding-bottom: 27px;
 	position: relative;
 	overflow-x: hidden;
 	overflow-y: scroll;
@@ -92,22 +91,29 @@ body{
 #main-container header h3{
 	border: none;
 	color: rgba(187, 53, 80, 0.8);
-	font-size: 2em;
+	font-size: 1.6em;
 	padding: 0.6em 1.2em;
 	letter-spacing: 1px;
 	cursor: text;
 	display: inline-block;
 	margin: 2px 3px;
+	font-weight: 300;
 }
 
 .task-node{
 	display: none;
-	margin: 0 12px;
+	margin: 0 auto;
 	padding: 0;
+	max-width: 970px;
+	min-width: 300px;
 }
 
 .task-node.cur-task{
 	display: block;
+}
+
+#dt-group-tree{
+	padding-left: 12px;
 }
 
 #dt-group-tree ul{
