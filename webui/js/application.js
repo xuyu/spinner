@@ -39,6 +39,14 @@ var g_filesystem = $("#dt-filesystem");
 var g_file_editor = ace.edit("file-editor");
 g_file_editor.setTheme("ace/theme/xcode");
 g_file_editor.setPrintMarginColumn(false);
+var g_dashboard = $("#dt-dashboard");
+var g_dashboard_btime = $("#dashboard-btime");
+var g_dashboard_load = $("#dashboard-load");
+var g_dashboard_cputimes = $("#dashboard-cputimes");
+var g_dashboard_meminfo = $("#dashboard-meminfo");
+var g_dashboard_diskusage = $("#dashboard-diskusage");
+var g_dashboard_diskio = $("#dashboard-diskio");
+var g_dashboard_netio = $("#dashboard-netio");
 
 function change_cur_task(name){
 	if (name != undefined && name != null && name != "") {
@@ -67,9 +75,9 @@ function task(name, hostname){
 			g_group_tree.addClass("cur-task");
 			group_tree_api();
 		break
-		case "trust_central":
-		break
 		case "dashboard":
+			g_dashboard.addClass("cur-task");
+			dashboard_api();
 		break
 		case "file_system":
 			g_filesystem.addClass("cur-task");
@@ -79,6 +87,11 @@ function task(name, hostname){
 			g_terminal_textarea.empty();
 			g_terminal_input.val(terminal_prompt());
 		break
+	}
+	if (name != "dashboard") {
+		g_dashboard_last_data = null;
+		clearInterval(g_dashboard_runner);
+		g_dashboard_runner = null;
 	}
 }
 
