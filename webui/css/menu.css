@@ -3,13 +3,17 @@ nav.menu-nav{
 	left: 0;
 	top: 0;
 	z-index: 100;
-	width: auto;
+	width: 300px;
 	height: 100%;
 	background: rgba(72, 167, 112, 1);
-	-webkit-transition: all 0.4s;
-	transition: all 0.4s;
-	-webkit-transform: translate3d(-100%, 0, 0);
-	transform: translate3d(-100%, 0, 0);
+	-webkit-transition: all 0.5s;
+	transition: all 0.5s;
+	-webkit-transform: translate3d(-100%, 0, 0) rotateY(-90deg);
+	transform: translate3d(-100%, 0, 0) rotateY(-90deg);
+	-webkit-transform-origin: 100% 50%;
+	transform-origin: 100% 50%;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
 	visibility: hidden;
 	font-size: 16px;
 	font-family: 'Lato', Calibri, Arial, sans-serif;
@@ -17,8 +21,10 @@ nav.menu-nav{
 
 nav.menu-nav-open{
 	visibility: visible;
-	-webkit-transform: translate3d(0, 0, 0);
-	transform: translate3d(0, 0, 0);
+	-webkit-transform: translate3d(-100%, 0, 0) rotateY(0deg);
+	transform: translate3d(-100%, 0, 0) rotateY(0deg);
+	-webkit-transition: -webkit-transform 0.5s;
+	transition: transform 0.5s;
 }
 
 nav.menu-nav h2{

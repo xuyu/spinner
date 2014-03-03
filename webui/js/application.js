@@ -1,13 +1,16 @@
 // menu-nav
+var g_pusher = $("#pusher");
 var g_menu_nav = $("#menu-nav");
-var g_menu_nav_open = false;
+var g_menu_nav_open = true;
 
 function open_menu_nav(){
+	g_pusher.addClass("push-open");
 	g_menu_nav.addClass("menu-nav-open");
 	g_menu_nav_open = true;
 }
 
 function close_menu_nav(){
+	g_pusher.removeClass("push-open");
 	g_menu_nav.removeClass("menu-nav-open");
 	g_menu_nav_open = false
 }
@@ -72,7 +75,6 @@ function task(name, hostname){
 			g_terminal_input.val(terminal_prompt());
 		break
 	}
-	close_menu_nav();
 }
 
 function terminal_prompt(){

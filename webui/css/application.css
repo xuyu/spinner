@@ -1,9 +1,20 @@
+html{
+	padding: 0;
+	margin: 0;
+	width: 100%;
+	height: 100%;
+}
+
 body{
 	background: #f3efe0;
 	color: #48a770;
 	font-weight: 300;
 	font-size: 14px;
 	font-family: 'Lato', Calibri, Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	overflow: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -21,9 +32,32 @@ body{
 	background: #E67E22;
 }
 
+#pusher{
+	position: relative;
+	z-index: 99;
+	height: 100%;
+	left: 0;
+	padding: 0;
+	margin: 0;
+	-webkit-transform-style: preserve-3d;
+	transform-style: preserve-3d;
+	-webkit-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+#pusher.push-open{
+	-webkit-transform: translate3d(300px, 0, 0);
+	transform: translate3d(300px, 0, 0);
+	margin-right: 300px;
+}
+
 #main-container{
-	max-width: 970px;
 	padding-bottom: 27px;
+	position: relative;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	height: 100%;
+	width: 100%;
 }
 
 #main-container header{
@@ -68,6 +102,8 @@ body{
 
 .task-node{
 	display: none;
+	margin: 0 12px;
+	padding: 0;
 }
 
 .task-node.cur-task{
@@ -83,9 +119,11 @@ body{
 	overflow: hidden;
 	-webkit-transition: all 0.3s;
 	transition: all 0.3s;
-	margin-right: 2%;
-	width: auto;
+	margin: 0 2% 10px 0;
+	width: 31%;
 	min-width: 250px;
+	display: inline-block;
+	vertical-align: top;
 }
 
 #dt-group-tree ul.has-miss{
@@ -161,7 +199,7 @@ body{
 	display: block;
 	line-height: 1.5em;
 	width: 100%;
-	margin: 0 8px;
+	margin: 0 8px 0 3px;
 	padding: 0.5em;
 	background: transparent;
 	border: none;
@@ -178,13 +216,17 @@ body{
 
 #dt-terminal pre{
 	max-height: 340px;
-	overflow-y: auto;
 	border-radius: 3px 3px 0 0;
+	word-break: break-all;
+	word-wrap: break-word;
+	font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
+	overflow: auto;
+	white-space: pre;
+	box-sizing: border-box;
 }
 
 #dt-terminal input{
-	height: 2em;
-	padding-bottom: 1em;
+	padding-top: 0;
 	border-radius: 0 0 3px 3px;
 	font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
 }

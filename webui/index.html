@@ -11,7 +11,8 @@
 		<link rel="stylesheet" href="/spinner/webui/static/css/application.css">
 	</head>
 	<body>
-		<nav class="menu-nav" id="menu-nav">
+		<div id="pusher" class="push-open">
+		<nav class="menu-nav menu-nav-open" id="menu-nav">
 			<h2>
 				<a href="javascript: trigger_menu_nav();">
 					<img src="http://www.easyicon.net/api/resize_png_new.php?id=1121550&size=36">
@@ -26,7 +27,7 @@
 				<li><a href="javascript: task('terminal');"><i class="icon-terminal"></i>Terminal</a></li>
 			</ul>
 		</nav>
-		<div class="container" id="main-container">
+		<div id="main-container">
 			<header>
 			<a href="javascript: trigger_menu_nav();">
 				<h1 id="datacenter-name"></h1>
@@ -34,12 +35,13 @@
 				<h3 id="current-machine"></h3>
 			</a>
 			</header>
-			<div class="row task-node" id="dt-group-tree">
+			<div class="task-node" id="dt-group-tree">
 			</div>
 			<div class="task-node" id="dt-terminal">
 				<pre></pre>
 				<input type="text" autocomplete="off" spellcheck="false">
 			</div>
+		</div>
 		</div>
 		<script src="https://code.jquery.com/jquery-1.11.0.min.js"></script>
 		<script src="/spinner/webui/static/js/application.js"></script>

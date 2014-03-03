@@ -16,7 +16,7 @@ function group_tree_api(){
 		g_datacenter_location.text(data.Location);
 		var html = "";
 		$.each(data.Groups, function(index, gp) {
-			html = html + "<ul class='col-xs-6'><h3 class='dt-group-head'>" + gp.Name;
+			html = html + "<ul><h3 class='dt-group-head'>" + gp.Name;
 			html = html + "<span>" + gp.Machines.length + "</span></h3>";
 			$.each(gp.Machines, function(index, ma){
 				var cla = "";
