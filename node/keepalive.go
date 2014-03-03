@@ -26,6 +26,6 @@ func keepAlive() {
 		} else if resp.StatusCode != http.StatusOK {
 			log.Printf("%s %s", u, resp.Status)
 		}
-		time.Sleep(keepAliveDuration * time.Second)
+		time.Sleep(time.Duration(keepAliveDuration) * time.Second)
 	}
 }
