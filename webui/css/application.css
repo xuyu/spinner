@@ -254,6 +254,29 @@ body{
 
 #dt-filesystem h3{
 	font-weight: 400;
+	height: 32px;
+	line-height: 32px;
+	font-size: 18px;
+	margin: 0 0 0.5em 0;
+	padding: 0 0.5em;
+}
+
+#dt-filesystem h3 a{
+	float: right;
+}
+
+#dt-filesystem h3 a img{
+	width: 32px;
+	height: 32px;
+	-webkit-transform: translate3d(0, 0, 0) rotateZ(0deg);
+	transform: translate3d(0, 0, 0) rotateZ(0deg);
+	-webkit-transition: all 0.5s;
+	transition: all 0.5s;
+}
+
+#dt-filesystem h3 a img.moved{
+	-webkit-transform: translate3d(-3em, 0, 0) rotateZ(180deg);
+	transform: translate3d(-3em, 0, 0) rotateZ(180deg);
 }
 
 #dt-dashboard .dashboard-sub{
@@ -263,8 +286,8 @@ body{
 	border-radius: 2px;
 	background: rgba(7, 85, 35, 0.82);
 	margin: 0 2% 2% 0;
-	padding: 1em 1.2em;
-	font-size: 1.5em;
+	padding: 0.5em;
+	font-size: 1.2em;
 	font-weight: 300;
 	color: rgba(226, 240, 227, 0.89);
 	text-align: center;

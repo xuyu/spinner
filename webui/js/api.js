@@ -66,6 +66,29 @@ function terminal_api(cmd){
 	});
 }
 
+function save_file(){
+	var file = g_filesystem.find("h3>span").text();
+	if (file == null || file == undefined || file.length == 0) {
+		return;
+	}
+	var url = "/spinner/webui/save?h=" + encodeURIComponent(g_cur_hostname) + "&file=" + encodeURIComponent(file);
+	$.ajax(
+		{
+			type: "POST",
+			url: url,
+			data: g_file_editor.getValue(),
+			beforeSend: function(){
+				g_filesystem.find("h3>a>img").addClass("moved");
+			},
+			complete: function(){
+				setTimeout(function(){
+					g_filesystem.find("h3>a>img").removeClass("moved");
+				}, 500);
+			}
+		}
+	);
+}
+
 function open_file_api(file){
 	$.ajax(
 		{
@@ -103,7 +126,7 @@ function open_file_api(file){
 							mode = "plain_text";
 					}
 				}
-				g_filesystem.find("h3").text(file);
+				g_filesystem.find("h3>span").text(file);
 				g_file_editor.getSession().setMode("ace/mode/" + mode);
 				g_file_editor.setValue(data);
 			}
