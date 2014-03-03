@@ -118,6 +118,14 @@ function terminal_input_bind_event(){
 			terminal_api(cmd.replace(/^root@.+?# /, ""));
 		}
 	});
+	g_terminal_input.keydown(function(e){
+		if (e.keyCode == 8 || e.keyCode == 46) {
+			if (g_terminal_input.val() == terminal_prompt()) {
+				return false;
+			}
+		}
+		return true;
+	});
 }
 
 $(document).ready(function(){
