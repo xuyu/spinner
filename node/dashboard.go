@@ -34,11 +34,11 @@ func hardDiskUsage() (map[string][2]uint64, error) {
 	for _, items := range parts {
 		if strings.HasPrefix(items[0], "/dev/") {
 			mount := items[1]
-			total, used, err := sensor.DiskUsage(mount)
+			total, free, err := sensor.DiskUsage(mount)
 			if err != nil {
 				return nil, err
 			}
-			usages[mount] = [2]uint64{total, used}
+			usages[mount] = [2]uint64{total, free}
 		}
 	}
 	return usages, nil

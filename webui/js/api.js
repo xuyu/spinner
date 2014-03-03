@@ -205,7 +205,7 @@ function dashboard_show_diskusage(usage){
 	var html = "<h4>Disk Usage</h4><table><tr><td>mount</td><td>size</td><td>use%</td></tr>";
 	$.each(usage, function(mount, value){
 		var tr = "<tr><td>" + mount + "</td><td>" + readableFileSize(value[0]) + "</td><td>";
-		tr = tr + Math.round(value[1] *100 / value[0]) + "%</td></tr>";
+		tr = tr + Math.round((value[0] - value[1]) *100 / value[0]) + "%</td></tr>";
 		html = html + tr;
 	});
 	html = html + "</table>";
