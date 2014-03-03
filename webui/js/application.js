@@ -65,7 +65,7 @@ function close_last_task(){
 	$(".cur-task").removeClass("cur-task");
 }
 
-function task(name, hostname){
+function task(name, hostname, options){
 	if (name == g_cur_task) return
 	close_last_task()
 	change_cur_task(name);
@@ -81,6 +81,9 @@ function task(name, hostname){
 		break
 		case "file_system":
 			g_filesystem.addClass("cur-task");
+			if (options != null && options != undefined && options.file != undefined) {
+				open_file_api(options.file);
+			}
 		break
 		case "terminal":
 			g_terminal.addClass("cur-task");
@@ -111,11 +114,21 @@ function terminal_textarea_append(text){
 function terminal_input_bind_event(){
 	g_terminal_input.keyup(function(e){
 		if (e.keyCode == 13) {
-			var cmd = g_terminal_input.val();
+			var input = g_terminal_input.val().trim();
 			g_terminal_input.val("");
 			g_terminal_input.attr("readonly", "readonly");
-			terminal_textarea_append(cmd);
-			terminal_api(cmd.replace(/^root@.+?# /, ""));
+			terminal_textarea_append(input);
+			var cmd = input.replace(/^root@.+?# /, "").trim();
+			var space = cmd.indexOf(" ");
+			if (space == 4 && cmd.substr(0, space) == "open" && cmd.substr(space+1).length > 0
+				&& cmd.substr(space+1)[0] == "/") {
+				task("file_system", g_cur_hostname, {
+					file: cmd.substr(space + 1).trim()
+				});
+			} else {
+				terminal_api(cmd);
+			}
+			return false;
 		}
 	});
 	g_terminal_input.keydown(function(e){
