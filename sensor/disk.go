@@ -33,9 +33,9 @@ func DiskIOCount() (map[string]map[string]int64, error) {
 			if names[name] {
 				result[name] = map[string]int64{
 					"reads":  spinner.MustInt64(string(items[3])),
-					"rbytes": spinner.MustInt64(string(items[5])),
+					"rbytes": spinner.MustInt64(string(items[5])) * 512,
 					"rtime":  spinner.MustInt64(string(items[6])),
-					"writes": spinner.MustInt64(string(items[7])),
+					"writes": spinner.MustInt64(string(items[7])) * 512,
 					"wbytes": spinner.MustInt64(string(items[9])),
 					"wtime":  spinner.MustInt64(string(items[10])),
 				}
