@@ -65,3 +65,48 @@ function terminal_api(cmd){
 		g_terminal_input.focus();
 	});
 }
+
+function open_file_api(file){
+	$.ajax(
+		{
+			type: "GET",
+			url: "/spinner/webui/open",
+			data: {h: g_cur_hostname, file: file},
+			timeout: 60000,
+			success: function(data){
+				var mode, m = /\.([a-z]+)$/.exec(file);
+				if (m == null) {
+					mode = "plain_text";
+				} else {
+					switch (m[1]) {
+						case "c":
+						case "cpp":
+						case "h":
+						case "hpp":
+							mode = "c_cpp";
+							break;
+						case "go":
+							mode = "golang";
+							break;
+						case "pb":
+							mode = "protobuf";
+							break
+						case "json":
+						case "lua":
+						case "python":
+						case "sh":
+						case "xml":
+						case "yaml":
+							mode = m[1];
+							break;
+						default:
+							mode = "plain_text";
+					}
+				}
+				g_filesystem.find("h3").text(file);
+				g_file_editor.getSession().setMode("ace/mode/" + mode);
+				g_file_editor.setValue(data);
+			}
+		}
+	);
+}

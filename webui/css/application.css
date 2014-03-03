@@ -236,3 +236,22 @@ body{
 	border-radius: 0 0 3px 3px;
 	font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
 }
+
+#file-editor{
+	position: relative;
+	height: 600px;
+	margin-bottom: 27px;
+	background: rgba(0, 0, 0, 0.02);
+	color: #444;
+	border-radius: 5px;
+	border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+#file-editor .ace_gutter{
+	background: rgba(0, 0, 0, 0.05);
+	color: #AAAA9F;
+}
+
+#dt-filesystem h3{
+	font-weight: 400;
+}

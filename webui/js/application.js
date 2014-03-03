@@ -35,6 +35,10 @@ var g_group_tree = $("#dt-group-tree");
 var g_terminal = $("#dt-terminal");
 var g_terminal_textarea = $("#dt-terminal pre");
 var g_terminal_input = $("#dt-terminal input");
+var g_filesystem = $("#dt-filesystem");
+var g_file_editor = ace.edit("file-editor");
+g_file_editor.setTheme("ace/theme/xcode");
+g_file_editor.setPrintMarginColumn(false);
 
 function change_cur_task(name){
 	if (name != undefined && name != null && name != "") {
@@ -68,6 +72,7 @@ function task(name, hostname){
 		case "dashboard":
 		break
 		case "file_system":
+			g_filesystem.addClass("cur-task");
 		break
 		case "terminal":
 			g_terminal.addClass("cur-task");
