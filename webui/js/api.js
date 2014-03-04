@@ -10,6 +10,7 @@ function trigger_ul_head_click(ev){
 	}
 }
 
+var g_group_tree_runner = null;
 function group_tree_api(){
 	$.getJSON("/spinner/webui/tree", function(data){
 		g_datacenter_name.text(data.Name);
@@ -43,6 +44,11 @@ function group_tree_api(){
 				$(ul).addClass("has-miss");
 			}
 		});
+		if (g_group_tree_runner == null) {
+			g_group_tree_runner = setInterval(function(){
+				group_tree_api();
+			}, 300000);
+		}
 	});
 }
 

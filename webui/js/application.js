@@ -96,6 +96,10 @@ function task(name, hostname, options){
 		clearInterval(g_dashboard_runner);
 		g_dashboard_runner = null;
 	}
+	if (name != "group_tree") {
+		clearInterval(g_group_tree_runner);
+		g_group_tree_runner = null;
+	}
 }
 
 function terminal_prompt(){
