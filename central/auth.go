@@ -143,10 +143,5 @@ func (a *authHandler) serveCentral(rw http.ResponseWriter, req *http.Request) {
 		rw.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	if !ip.IsLoopback() && !isPrivateIP(ip) {
-		rw.WriteHeader(http.StatusNotAcceptable)
-		log.Printf("not private ip: %s", ip.String())
-		return
-	}
 	a.centralHandler.ServeHTTP(rw, req)
 }
