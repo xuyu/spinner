@@ -1,6 +1,7 @@
 package main
 
 import (
+	"crypto/sha1"
 	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
@@ -110,7 +111,11 @@ func (a *authHandler) webuiLogin(rw http.ResponseWriter, req *http.Request) {
 	req.ParseForm()
 	name := req.PostFormValue("name")
 	password := req.PostFormValue("password")
-	if name == "admin" && password == "123" {
+	h := sha1.New()
+	h.Write([]byte(name))
+	h.Write([]byte(password))
+	const dx = "2d50d1bcd4fd117eaa7bf2ce2d29cd06026b72fa"
+	if hex.EncodeToString(h.Sum(nil)) == dx {
 		now := time.Now()
 		exp := now.AddDate(0, 0, 7)
 		timestamp := strconv.FormatInt(now.Unix(), 10)
