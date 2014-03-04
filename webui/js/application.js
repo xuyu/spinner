@@ -111,6 +111,25 @@ function terminal_textarea_append(text){
 	g_terminal_textarea.scrollTop(g_terminal_textarea[0].scrollHeight - g_terminal_textarea.height());
 }
 
+function special_terminal_cmd_open(file){
+	if (file.length > 0 && file[0] == "/") {
+		task("file_system", g_cur_hostname, {file: file});
+		return false;
+	}
+}
+
+function special_terminal_command(t){
+	switch (t) {
+		case "open":
+		case "vim":
+		case "vi":
+		case "edit":
+			return special_terminal_cmd_open;
+		default:
+			return undefined;
+	}
+}
+
 function terminal_input_bind_event(){
 	g_terminal_input.keyup(function(e){
 		if (e.keyCode == 13) {
@@ -120,11 +139,19 @@ function terminal_input_bind_event(){
 			terminal_textarea_append(input);
 			var cmd = input.replace(/^root@.+?# /, "").trim();
 			var space = cmd.indexOf(" ");
-			if (space == 4 && cmd.substr(0, space) == "open" && cmd.substr(space+1).length > 0
-				&& cmd.substr(space+1)[0] == "/") {
-				task("file_system", g_cur_hostname, {
-					file: cmd.substr(space + 1).trim()
-				});
+			if (space > 0) {
+				var t = cmd.substr(0, space);
+				var f = special_terminal_command(t);
+				if (f == undefined) {
+					terminal_api(cmd);
+				} else {
+					var a = cmd.substr(space+1).trim();
+					if (f(a) !== false) {
+						terminal_api(cmd);
+					} else {
+						g_terminal_input.removeAttr("readonly");
+					}
+				}
 			} else {
 				terminal_api(cmd);
 			}
