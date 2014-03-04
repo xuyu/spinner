@@ -237,21 +237,16 @@ body{
 	padding: 0.8em;
 	font-size: 1.8em;
 	cursor: pointer;
+	font-weight: 400;
 }
 
 #dt-group-tree h3 span{
 	float: right;
-	display: inline-block;
 	line-height: 1;
-	padding: 6px 16px;
-	vertical-align: baseline;
-	text-align: center;
-	white-space: nowrap;
+	padding: 6px 6px 0 0;
 	font-weight: 300;
 	font-size: 0.85em;
-	background-color: rgba(0, 0, 0, 0.2);
-	border-radius: 3px;
-	margin-top: -2px;
+	color: rgba(0, 0, 0, 0.5);
 }
 
 #dt-group-tree ul li{
