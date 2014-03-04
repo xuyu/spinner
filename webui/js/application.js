@@ -66,30 +66,30 @@ function close_last_task(){
 }
 
 function task(name, hostname, options){
-	if (name == g_cur_task) return
-	close_last_task()
+	if (name == g_cur_task) return;
+	close_last_task();
 	change_cur_task(name);
 	change_cur_hostname(hostname);
 	switch (name) {
 		case "group_tree":
 			g_group_tree.addClass("cur-task");
 			group_tree_api();
-		break
+		break;
 		case "dashboard":
 			g_dashboard.addClass("cur-task");
 			dashboard_api();
-		break
+		break;
 		case "file_system":
 			g_filesystem.addClass("cur-task");
 			if (options != null && options != undefined && options.file != undefined) {
 				open_file_api(options.file);
 			}
-		break
+		break;
 		case "terminal":
 			g_terminal.addClass("cur-task");
 			g_terminal_textarea.empty();
 			g_terminal_input.val(terminal_prompt());
-		break
+		break;
 	}
 	if (name != "dashboard") {
 		g_dashboard_last_data = null;

@@ -37,13 +37,47 @@
 			<div class="task-node" id="dt-group-tree">
 			</div>
 			<div class="task-node" id="dt-dashboard">
-				<div class="dashboard-sub" id="dashboard-btime"></div>
-				<div class="dashboard-sub" id="dashboard-load"></div>
-				<div class="dashboard-sub" id="dashboard-meminfo"></div>
-				<div class="dashboard-sub" id="dashboard-diskusage"></div>
-				<div class="dashboard-sub" id="dashboard-cputimes"></div>
-				<div class="dashboard-sub" id="dashboard-diskio"></div>
-				<div class="dashboard-sub" id="dashboard-netio"></div>
+				<div class="dashboard-sub" id="dashboard-btime">
+					<h4>Server Boot Time</h4>
+					<span></span>
+				</div>
+				<div class="dashboard-sub" id="dashboard-load">
+					<h4>Load</h4>
+					<span></span><span></span><span></span><span></span>
+				</div>
+				<div class="dashboard-sub" id="dashboard-cputimes">
+					<h4>CPU</h4>
+					<table>
+					<tr><td>User</td><td>System</td><td>IOWait</td></tr>
+					<tr><td></td><td></td><td></td></tr>
+					</table>
+				</div>
+				<div class="dashboard-sub" id="dashboard-meminfo">
+					<h4>Memory Info</h4>
+					<table>
+					<tr><td>free/total</td><td></td></tr>
+					<tr><td>buffers/cached</td><td></td></tr>
+					<tr><td>swap</td><td></td></tr>
+					</table>
+				</div>
+				<div class="dashboard-sub" id="dashboard-diskusage">
+					<h4>Disk Usage</h4>
+					<table></table>
+				</div>
+				<div class="dashboard-sub" id="dashboard-diskio">
+					<h4>Disk IO</h4>
+					<table>
+					<tr><td>Read</td><td></td></tr>
+					<tr><td>Write</td><td></td></tr>
+					</table>
+				</div>
+				<div class="dashboard-sub" id="dashboard-netio">
+					<h4>Net IO</h4>
+					<table>
+					<tr><td>Receive</td><td></td></tr>
+					<tr><td>Send</td><td></td></tr>
+					</table>
+				</div>
 			</div>
 			<div class="task-node" id="dt-filesystem">
 				<h3>

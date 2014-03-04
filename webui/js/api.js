@@ -31,7 +31,7 @@ function group_tree_api(){
 				}
 				html = html + "<li class='" + cla;
 				html = html + "'><a href=\"javascript: task('dashboard', '" + ma.Hostname + "');\">";
-				html = html + ma.IP + " @ " + ma.Hostname + "</a></li>"
+				html = html + ma.IP + " @ " + ma.Hostname + "</a></li>";
 			});
 			html = html + "</ul>";
 		});
@@ -127,8 +127,8 @@ function open_file_api(file){
 					}
 				}
 				g_filesystem.find("h3>span").text(file);
-				g_file_editor.getSession().setMode("ace/mode/" + mode);
 				g_file_editor.setValue(data);
+				g_file_editor.getSession().setMode("ace/mode/" + mode);
 			}
 		}
 	);
@@ -184,58 +184,50 @@ function netio_speed(t1, t2, duration){
 }
 
 function dashboard_show_cputimes(times){
-	var html = "<h4>CPU</h4><table><tr><td>User</td><td>System</td><td>IOWait</td></tr>";
-	html = html + "<tr><td>" + times[0] + "</td><td>" + times[1] + "</td><td>" + times[2] + "</td></tr></table";
-	g_dashboard_cputimes.html(html);
+	var tds = g_dashboard_cputimes.find("table tr:last-child>td");
+	$(tds[0]).text(times[0]);
+	$(tds[1]).text(times[1]);
+	$(tds[2]).text(times[2]);
 }
 
 function dashboard_show_meminfo(meminfo){
-	var html = "<h4>Memory Info</h4><table>";
-	var html = html + "<tr><td>free/total</td><td>" + 
-		readableFileSize(meminfo.free) + "/" + readableFileSize(meminfo.total) + "</td></tr>";
-	var html = html + "<tr><td>buffers/cached</td><td>" + readableFileSize(meminfo.buffers) +
-		"/" + readableFileSize(meminfo.cached) + "</td></tr>";
-	var html = html + "<tr><td>swap</td><td>" + readableFileSize(meminfo.sfree) +
-		"/" + readableFileSize(meminfo.stotal) + "</td></tr>";
-	html = html + "</table>";
-	g_dashboard_meminfo.html(html);
+	var trs = g_dashboard_meminfo.find("table tr");
+	$(trs[0]).find("td:last-child").text(readableFileSize(meminfo.free) + "/" + readableFileSize(meminfo.total));
+	$(trs[1]).find("td:last-child").text(readableFileSize(meminfo.buffers) + "/" + readableFileSize(meminfo.cached));
+	$(trs[2]).find("td:last-child").text(readableFileSize(meminfo.sfree) + "/" + readableFileSize(meminfo.stotal));
 }
 
 function dashboard_show_diskusage(usage){
-	var html = "<h4>Disk Usage</h4><table><tr><td>mount</td><td>size</td><td>use%</td></tr>";
+	var table = g_dashboard_diskusage.find("table");
+	var html = "<tr><td>mount</td><td>size</td><td>use%</td></tr>";
 	$.each(usage, function(mount, value){
 		var tr = "<tr><td>" + mount + "</td><td>" + readableFileSize(value[0]) + "</td><td>";
 		tr = tr + Math.round((value[0] - value[1]) *100 / value[0]) + "%</td></tr>";
 		html = html + tr;
 	});
-	html = html + "</table>";
-	g_dashboard_diskusage.html(html);
+	table.html(html);
 }
 
 function dashboard_show_boottime(btime){
-	var html = "<h4>Server Boot Time</h4>";
-	html = html + "<span>" + (new Date(btime * 1000)).toLocaleString() + "</span>";
-	g_dashboard_btime.html(html);
+	g_dashboard_btime.find("span").text((new Date(btime * 1000)).toLocaleString());
 }
 
-function dashboard_show_load(load){
-	var html = "<h4>Load</h4>";
-	html = html + "<span>" + float2p(load[0]) + "</span>";
-	html = html + "<span>" + float2p(load[1]) + "</span>";
-	html = html + "<span>" + float2p(load[2]) + "</span>";
-	g_dashboard_load.html(html);
+function dashboard_show_load(c1, c2, load){
+	var spans = g_dashboard_load.find("span");
+	$(spans[0]).text(c1 + "/" + c2);
+	$(spans[1]).text(float2p(load[0]));
+	$(spans[2]).text(float2p(load[1]));
+	$(spans[3]).text(float2p(load[2]));
 }
 
 function dashboard_show_diskio(speed){
-	var html = "<h4>Disk IO</h4><table><tr><td>Read</td><td>" + readableFileSize(speed[0]) + "/s</td></tr>";
-	html = html + "<tr><td>Write</td><td>" + readableFileSize(speed[1]) + "/s</td></tr></table>";
-	g_dashboard_diskio.html(html);
+	g_dashboard_diskio.find("table tr:first-child>td:last-child").text(readableFileSize(speed[0]) + "/s");
+	g_dashboard_diskio.find("table tr:last-child>td:last-child").text(readableFileSize(speed[1]) + "/s");
 }
 
 function dashboard_show_netio(speed){
-	var html = "<h4>Net IO</h4><table><tr><td>Receive</td><td>" + readableFileSize(speed[0]) + "/s</td></tr>";
-	html = html + "<tr><td>Send</td><td>" + readableFileSize(speed[1]) + "/s</td></tr></table>";
-	g_dashboard_netio.html(html);
+	g_dashboard_netio.find("table tr:first-child>td:last-child").text(readableFileSize(speed[0]) + "/s");
+	g_dashboard_netio.find("table tr:last-child>td:last-child").text(readableFileSize(speed[1]) + "/s");
 }
 
 var g_dashboard_last_data = null;
@@ -257,7 +249,7 @@ var g_dashboard_runner = null;
 function dashboard_api(){
 	$.getJSON("/spinner/webui/dashboard", {h: g_cur_hostname}, function(data){
 		dashboard_show_boottime(data.btime);
-		dashboard_show_load(data.load);
+		dashboard_show_load(data.physicpu, data.logicpu, data.load);
 		dashboard_show_meminfo(data.meminfo);
 		dashboard_show_diskusage(data.diskusage);
 		dashboard_show_next(data);
