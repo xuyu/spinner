@@ -1,12 +1,10 @@
 function trigger_ul_head_click(ev){
-	var e = ev.target;
-	var ul = $(e).parent();
-	var head_height = $(e).outerHeight();
-	var ul_height = ul.outerHeight();
-	if (ul_height > head_height) {
-		ul.height(head_height);
+	var e = $(ev.target);
+	var ul = e.parent();
+	if (ul.hasClass("expand")) {
+		ul.removeClass("expand");
 	} else {
-		ul.height("");
+		ul.addClass("expand");
 	}
 }
 
@@ -38,10 +36,10 @@ function group_tree_api(){
 		});
 		g_group_tree.html(html);
 		g_group_tree.find("ul>h3.dt-group-head").click(trigger_ul_head_click);
-		g_group_tree.find("ul:first-child").height(g_group_tree.find("ul:first-child>h3").outerHeight());
 		$.each(g_group_tree.find("ul"), function(index, ul){
-			if ($(ul).find("li.miss").length > 0) {
-				$(ul).addClass("has-miss");
+			ul = $(ul);
+			if (ul.find("li.miss").length > 0) {
+				ul.addClass("has-miss");
 			}
 		});
 		if (g_group_tree_runner == null) {
