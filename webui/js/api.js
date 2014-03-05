@@ -192,6 +192,13 @@ function dashboard_show_cputimes(times){
 	$(tds[0]).text(times[0]);
 	$(tds[1]).text(times[1]);
 	$(tds[2]).text(times[2]);
+	if (times[0] > 90 || times[1] > 75 || times[2] > 90) {
+		dashboard_bad(g_dashboard_cputimes);
+	} else if (times[0] > 80 || times[1] > 50 || times[2] > 80) {
+		dashboard_warning(g_dashboard_cputimes);
+	} else {
+		dashboard_normal(g_dashboard_cputimes);
+	}
 }
 
 function dashboard_show_meminfo(meminfo){
@@ -199,17 +206,43 @@ function dashboard_show_meminfo(meminfo){
 	$(trs[0]).find("td:last-child").text(readableFileSize(meminfo.free) + "/" + readableFileSize(meminfo.total));
 	$(trs[1]).find("td:last-child").text(readableFileSize(meminfo.buffers) + "/" + readableFileSize(meminfo.cached));
 	$(trs[2]).find("td:last-child").text(readableFileSize(meminfo.sfree) + "/" + readableFileSize(meminfo.stotal));
+	if (meminfo.free < 10*1024*1024) {
+		dashboard_bad(g_dashboard_meminfo);
+	} else if (meminfo.free < 50*1024*1024) {
+		dashboard_warning(g_dashboard_meminfo);
+	} else {
+		dashboard_normal(g_dashboard_meminfo);
+	}
 }
 
 function dashboard_show_diskusage(usage){
+	var check = "normal";
 	var table = g_dashboard_diskusage.find("table");
 	var html = "<tr><td>mount</td><td>size</td><td>use%</td></tr>";
 	$.each(usage, function(mount, value){
+		var usage = Math.round((value[0] - value[1]) *100 / value[0]);
 		var tr = "<tr><td>" + mount + "</td><td>" + readableFileSize(value[0]) + "</td><td>";
-		tr = tr + Math.round((value[0] - value[1]) *100 / value[0]) + "%</td></tr>";
-		html = html + tr;
+		html = html + tr + usage + "%</td></tr>";
+		if (check != "bad" && (usage > 95 || value[1] < 5*1024*1024*1024)) {
+			dashboard_bad(g_dashboard_diskusage);
+			check = "bad";
+		} 
+		if (check == "normal" && (usage > 90 || value[1] < 10*1024*1024*1024)) {
+			dashboard_warning(g_dashboard_diskusage);
+			check = "warning";
+		}
 	});
 	table.html(html);
+	switch (check) {
+		case "bad":
+			dashboard_bad(g_dashboard_diskusage);
+			break;
+		case "warning":
+			dashboard_warning(g_dashboard_diskusage);
+			break;
+		case "normal":
+			dashboard_normal(g_dashboard_diskusage);
+	}
 }
 
 function dashboard_show_boottime(btime){
@@ -222,6 +255,13 @@ function dashboard_show_load(c1, c2, load){
 	$(spans[1]).text(float2p(load[0]));
 	$(spans[2]).text(float2p(load[1]));
 	$(spans[3]).text(float2p(load[2]));
+	if (load[0] > 5) {
+		dashboard_bad(g_dashboard_load);
+	} else if (load[0] > 2) {
+		dashboard_warning(g_dashboard_load);
+	} else {
+		dashboard_normal(g_dashboard_load);
+	}
 }
 
 function dashboard_show_diskio(speed){

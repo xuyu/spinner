@@ -172,6 +172,18 @@ function terminal_input_bind_event(){
 	});
 }
 
+function dashboard_warning(e){
+	e.removeClass("bad").addClass("warning");
+}
+
+function dashboard_bad(e){
+	e.removeClass("warning").addClass("bad");
+}
+
+function dashboard_normal(e){
+	e.removeClass("warning").removeClass("bad");
+}
+
 $(document).ready(function(){
 	task('group_tree');
 	terminal_input_bind_event();

@@ -392,12 +392,20 @@ body{
 	min-width: 40%;
 }
 
+#dt-dashboard .dashboard-sub.bad{
+	background: rgb(189, 72, 7);
+}
+
+#dt-dashboard .dashboard-sub.warning{
+	background: rgb(194, 149, 7);
+}
+
 #dt-dashboard .dashboard-sub h4{
 	padding: 0;
 	margin: 0 0 1em 0;
 	font-weight: 300;
 	font-size: 1em;
-	color: rgba(52, 172, 167, 0.8);
+	color: rgba(117, 241, 236, 0.65);
 }
 
 #dt-dashboard .dashboard-sub span{
