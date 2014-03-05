@@ -328,6 +328,7 @@ body{
 }
 
 #dt-terminal input{
+	width: 97%;
 	padding-top: 0;
 	border-radius: 0 0 3px 3px;
 	font-family: Menlo,Monaco,Consolas,"Courier New",monospace;
@@ -349,12 +350,14 @@ body{
 }
 
 #dt-filesystem h3{
-	font-weight: 400;
+	font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', 'Consolas', 'source-code-pro', monospace;
+	font-weight: normal;
 	height: 32px;
 	line-height: 32px;
-	font-size: 18px;
-	margin: 0 0 0.5em 0;
-	padding: 0 0.5em;
+	font-size: 16px;
+	margin: 0;
+	padding: 0;
+	margin-bottom: 12px;
 }
 
 #dt-filesystem h3 a{
