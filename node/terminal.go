@@ -50,11 +50,11 @@ func Terminal(rw http.ResponseWriter, req *http.Request) {
 	case err := <-ch:
 		if err != nil {
 			internalServerError(rw, err)
+			rw.Write([]byte("\n"))
 			log.Printf("terminal command [%s] error: %s", cmd, err.Error())
 		} else {
 			log.Printf("terminal command [%s]", cmd)
 		}
-		rw.Write([]byte("\n"))
 		rw.Write(buf.Bytes())
 	}
 }
