@@ -60,6 +60,9 @@ function terminal_api(cmd){
 			success: function(data){
 				terminal_textarea_append(data);
 			},
+			error: function(q){
+				terminal_textarea_append(q.responseText);
+			},
 			complete: function(){
 				g_terminal_input.val(terminal_prompt());
 				g_terminal_input.removeAttr("readonly");
